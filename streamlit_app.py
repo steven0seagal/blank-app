@@ -122,40 +122,346 @@ def main():
     # Main title
     st.markdown('<h1 class="main-header">🧬 Professional CV Builder for Bioinformaticians</h1>', unsafe_allow_html=True)
 
-    # Sidebar navigation
-    st.sidebar.title("📋 CV Sections")
+    # Initialize main section in session state
+    if 'main_section' not in st.session_state:
+        st.session_state.main_section = "CV Preview"
 
-    sections = [
-        "Personal Information",
-        "Education",
-        "Work Experience",
-        "Skills",
-        "Projects",
-        "Publications",
-        "Certifications & Awards",
-        "Preview & Export"
-    ]
+    # Main navigation
+    main_sections = ["CV Preview", "Edit CV"]
+    selected_main = st.sidebar.radio("Main Sections", main_sections,
+                                   index=main_sections.index(st.session_state.main_section))
 
-    selected_section = st.sidebar.radio("Navigate to:", sections)
-    st.session_state.current_section = selected_section
+    # Update session state when user manually selects from radio button
+    if selected_main != st.session_state.main_section:
+        st.session_state.main_section = selected_main
 
-    # Main content area based on selected section
-    if selected_section == "Personal Information":
-        personal_info_section()
-    elif selected_section == "Education":
-        education_section()
-    elif selected_section == "Work Experience":
-        experience_section()
-    elif selected_section == "Skills":
-        skills_section()
-    elif selected_section == "Projects":
-        projects_section()
-    elif selected_section == "Publications":
-        publications_section()
-    elif selected_section == "Certifications & Awards":
-        certifications_awards_section()
-    elif selected_section == "Preview & Export":
-        preview_export_section()
+    if st.session_state.main_section == "CV Preview":
+        cv_preview_main_page()
+    else:
+        # Sub-navigation for editing sections
+        st.sidebar.title("📋 CV Edit Sections")
+
+        edit_sections = [
+            "Personal Information",
+            "Education",
+            "Work Experience",
+            "Skills",
+            "Projects",
+            "Publications",
+            "Certifications & Awards",
+            "Export Options"
+        ]
+
+        selected_section = st.sidebar.radio("Edit Section:", edit_sections)
+        st.session_state.current_section = selected_section
+
+        # Main content area based on selected section
+        if selected_section == "Personal Information":
+            personal_info_section()
+        elif selected_section == "Education":
+            education_section()
+        elif selected_section == "Work Experience":
+            experience_section()
+        elif selected_section == "Skills":
+            skills_section()
+        elif selected_section == "Projects":
+            projects_section()
+        elif selected_section == "Publications":
+            publications_section()
+        elif selected_section == "Certifications & Awards":
+            certifications_awards_section()
+        elif selected_section == "Export Options":
+            export_section()
+
+def cv_preview_main_page():
+    """Display the main CV preview page"""
+    st.markdown('<h2 class="section-header">👀 Your Professional CV</h2>', unsafe_allow_html=True)
+
+    cv_data = st.session_state.cv_data
+    personal = cv_data['personal_info']
+
+    # Check if CV has any data
+    has_basic_info = any([
+        personal['full_name'],
+        personal['email'],
+        cv_data['education'],
+        cv_data['experience']
+    ])
+
+    if not has_basic_info:
+        st.info("🚀 Get started by editing your CV information in the 'Edit CV' section!")
+        st.markdown("### Quick Start Guide:")
+        st.markdown("""
+        1. **Personal Information** - Add your name, contact details, and professional summary
+        2. **Education** - Include your degrees and academic background
+        3. **Work Experience** - List your professional experience
+        4. **Skills** - Showcase your technical abilities
+        5. **Projects & Publications** - Highlight your research and development work
+        """)
+        return
+
+    # Display CV Preview
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        # Header section
+        if personal['full_name']:
+            st.markdown(f"# {personal['full_name']}")
+
+        if personal['title']:
+            st.markdown(f"### *{personal['title']}*")
+
+        # Contact information in a clean layout
+        contact_info = []
+        if personal['email']:
+            contact_info.append(f"📧 {personal['email']}")
+        if personal['phone']:
+            contact_info.append(f"📱 {personal['phone']}")
+        if personal['location']:
+            contact_info.append(f"📍 {personal['location']}")
+
+        if contact_info:
+            st.markdown(" | ".join(contact_info))
+
+        # Links
+        links = []
+        if personal['linkedin']:
+            links.append(f"[LinkedIn]({personal['linkedin']})")
+        if personal['github']:
+            links.append(f"[GitHub]({personal['github']})")
+        if personal['orcid']:
+            links.append(f"[ORCID]({personal['orcid']})")
+        if personal['website']:
+            links.append(f"[Website]({personal['website']})")
+
+        if links:
+            st.markdown(" • ".join(links))
+
+        st.divider()
+
+        # Professional Summary
+        if personal['summary']:
+            st.markdown("## 📝 Professional Summary")
+            st.markdown(f'<div class="info-card">{personal["summary"]}</div>', unsafe_allow_html=True)
+
+        # Technical Skills
+        if any(cv_data['skills'].values()):
+            st.markdown("## 🛠️ Technical Skills")
+
+            skills_cols = st.columns(2)
+            skill_categories = list(cv_data['skills'].items())
+
+            for i, (category, skills_list) in enumerate(skill_categories):
+                if skills_list:
+                    col_idx = i % 2
+                    with skills_cols[col_idx]:
+                        category_name = category.replace('_', ' ').title()
+                        st.markdown(f"**{category_name}:**")
+                        skills_html = ""
+                        for skill in skills_list:
+                            skills_html += f'<span class="skill-tag">{skill}</span>'
+                        st.markdown(skills_html, unsafe_allow_html=True)
+                        st.markdown("")
+
+        # Education
+        if cv_data['education']:
+            st.markdown("## 🎓 Education")
+            for edu in cv_data['education']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{edu['degree']}**")
+                st.markdown(f"*{edu['institution']}* • {edu['location']}")
+                st.markdown(f"📅 {edu['start_year']} - {edu['end_year']}")
+
+                if edu['thesis_title']:
+                    st.markdown(f"**Thesis:** {edu['thesis_title']}")
+                if edu['advisor']:
+                    st.markdown(f"**Advisor:** {edu['advisor']}")
+                if edu['gpa']:
+                    st.markdown(f"**GPA:** {edu['gpa']}")
+                if edu['description']:
+                    st.markdown(edu['description'])
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        # Work Experience
+        if cv_data['experience']:
+            st.markdown("## 💼 Work Experience")
+            for exp in cv_data['experience']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{exp['job_title']}**")
+                st.markdown(f"*{exp['company']}* • {exp['location']}")
+                st.markdown(f"📅 {exp['start_date']} - {exp['end_date']} • {exp['job_type']}")
+                if exp['description']:
+                    st.markdown(exp['description'])
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        # Projects
+        if cv_data['projects']:
+            st.markdown("## 🚀 Projects")
+            for project in cv_data['projects']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{project['name']}** - *{project['type']}*")
+                st.markdown(f"📅 {project['start_date']} - {project['end_date']}")
+
+                if project['technologies']:
+                    st.markdown(f"**Technologies:** {project['technologies']}")
+
+                links = []
+                if project['github_link']:
+                    links.append(f"[GitHub]({project['github_link']})")
+                if project['publication_link']:
+                    links.append(f"[Publication]({project['publication_link']})")
+                if links:
+                    st.markdown(" • ".join(links))
+
+                if project['description']:
+                    st.markdown(project['description'])
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        # Publications
+        if cv_data['publications']:
+            st.markdown("## 📚 Publications")
+            for pub in cv_data['publications']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{pub['title']}**")
+                st.markdown(f"*{pub['authors']}*")
+                st.markdown(f"📖 {pub['journal']} ({pub['year']})")
+
+                if pub['volume'] and pub['pages']:
+                    st.markdown(f"Vol. {pub['volume']}, pp. {pub['pages']}")
+                if pub['doi']:
+                    st.markdown(f"DOI: {pub['doi']}")
+                if pub['url']:
+                    st.markdown(f"[Read Publication]({pub['url']})")
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        # Certifications & Awards
+        if cv_data['certifications']:
+            st.markdown("## 📜 Certifications")
+            for cert in cv_data['certifications']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{cert['name']}**")
+                st.markdown(f"*{cert['issuing_org']}*")
+                st.markdown(f"📅 Issued: {cert['issue_date']} • Expires: {cert['expiry_date']}")
+                if cert['url']:
+                    st.markdown(f"[View Credential]({cert['url']})")
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        if cv_data['awards']:
+            st.markdown("## 🏆 Awards & Honors")
+            for award in cv_data['awards']:
+                st.markdown(f'<div class="info-card">', unsafe_allow_html=True)
+                st.markdown(f"**{award['name']}**")
+                st.markdown(f"*{award['awarding_org']}*")
+                st.markdown(f"📅 {award['date']}")
+                if award['description']:
+                    st.markdown(award['description'])
+                st.markdown('</div>', unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("### 🎯 Quick Actions")
+
+        # Quick edit buttons
+        edit_buttons = [
+            ("✏️ Edit Personal Info", 'Personal Information'),
+            ("🎓 Edit Education", 'Education'),
+            ("💼 Edit Experience", 'Work Experience'),
+            ("🛠️ Edit Skills", 'Skills'),
+            ("🚀 Edit Projects", 'Projects'),
+            ("📚 Edit Publications", 'Publications')
+        ]
+
+        for button_text, section in edit_buttons:
+            if st.button(button_text, use_container_width=True):
+                st.session_state.current_section = section
+                st.session_state.main_section = 'Edit CV'  # Switch to Edit CV section
+                st.rerun()
+
+        st.divider()
+
+        # Export section
+        st.markdown("### 📄 Export CV")
+
+        if st.button("📥 Export Options", type="primary", use_container_width=True):
+            st.session_state.current_section = 'Export Options'
+            st.session_state.main_section = 'Edit CV'  # Switch to Edit CV section
+            st.rerun()
+
+        # Quick stats
+        st.markdown("### 📊 CV Stats")
+        stats_data = {
+            "Education": len(cv_data['education']),
+            "Experience": len(cv_data['experience']),
+            "Projects": len(cv_data['projects']),
+            "Publications": len(cv_data['publications']),
+            "Certifications": len(cv_data['certifications']),
+            "Awards": len(cv_data['awards'])
+        }
+
+        for stat_name, count in stats_data.items():
+            if count > 0:
+                st.markdown(f"**{stat_name}:** {count}")
+
+def export_section():
+    """Separated export functionality"""
+    st.markdown('<h2 class="section-header">📄 Export & Import</h2>', unsafe_allow_html=True)
+
+    cv_data = st.session_state.cv_data
+    personal = cv_data['personal_info']
+
+    # PDF Template Selection
+    st.subheader("📄 PDF Export Templates")
+    template_col1, template_col2 = st.columns(2)
+
+    with template_col1:
+        pdf_template = st.selectbox(
+            "Choose PDF Template Style:",
+            ["Professional Blue", "Academic Classic", "Modern Minimal", "Scientific Research"],
+            help="Select a template that best fits your career focus"
+        )
+
+    with template_col2:
+        pdf_format = st.selectbox(
+            "PDF Format:",
+            ["A4", "Letter"],
+            help="Choose page size for your CV"
+        )
+
+    # Export buttons
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        if st.button("📄 Generate & Download PDF", type="primary"):
+            pdf_file = generate_pdf_cv(cv_data, template=pdf_template, page_format=pdf_format)
+            if pdf_file:
+                filename = f"{personal['full_name'].replace(' ', '_')}_CV_{pdf_template.replace(' ', '_')}.pdf"
+                st.download_button(
+                    label="⬇️ Download PDF",
+                    data=pdf_file,
+                    file_name=filename,
+                    mime="application/pdf"
+                )
+
+    with col2:
+        # Export as JSON
+        json_data = json.dumps(cv_data, indent=2, default=str)
+        st.download_button(
+            label="💾 Export Data (JSON)",
+            data=json_data,
+            file_name=f"{personal['full_name'].replace(' ', '_')}_CV_data.json",
+            mime="application/json"
+        )
+
+    with col3:
+        # Import JSON data
+        uploaded_json = st.file_uploader("📂 Import CV Data", type=['json'])
+        if uploaded_json is not None:
+            try:
+                imported_data = json.load(uploaded_json)
+                st.session_state.cv_data = imported_data
+                st.success("CV data imported successfully!")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error importing data: {e}")
 
 def personal_info_section():
     st.markdown('<h2 class="section-header">👤 Personal Information</h2>', unsafe_allow_html=True)
@@ -544,113 +850,6 @@ def certifications_awards_section():
                     st.rerun()
                 st.divider()
 
-def preview_export_section():
-    st.markdown('<h2 class="section-header">👀 Preview & Export</h2>', unsafe_allow_html=True)
-
-    cv_data = st.session_state.cv_data
-
-    # Preview section
-    st.subheader("📋 CV Preview")
-
-    # Personal Info Preview
-    personal = cv_data['personal_info']
-    if personal['full_name']:
-        st.markdown(f"### {personal['full_name']}")
-        if personal['title']:
-            st.markdown(f"*{personal['title']}*")
-
-        contact_info = []
-        if personal['email']:
-            contact_info.append(f"📧 {personal['email']}")
-        if personal['phone']:
-            contact_info.append(f"📱 {personal['phone']}")
-        if personal['location']:
-            contact_info.append(f"📍 {personal['location']}")
-
-        if contact_info:
-            st.write(" | ".join(contact_info))
-
-        if personal['summary']:
-            st.markdown("**Professional Summary:**")
-            st.write(personal['summary'])
-
-    # Skills Preview
-    if any(cv_data['skills'].values()):
-        st.markdown("**Technical Skills:**")
-        for category, skills_list in cv_data['skills'].items():
-            if skills_list:
-                category_name = category.replace('_', ' ').title()
-                st.write(f"*{category_name}:* {', '.join(skills_list)}")
-
-    # Education Preview
-    if cv_data['education']:
-        st.markdown("**Education:**")
-        for edu in cv_data['education']:
-            st.write(f"• {edu['degree']} - {edu['institution']} ({edu['start_year']}-{edu['end_year']})")
-
-    # Experience Preview
-    if cv_data['experience']:
-        st.markdown("**Work Experience:**")
-        for exp in cv_data['experience']:
-            st.write(f"• {exp['job_title']} at {exp['company']} ({exp['start_date']} - {exp['end_date']})")
-
-    # Export functionality
-    st.subheader("💾 Export Options")
-
-    # PDF Template Selection
-    st.subheader("📄 PDF Export Templates")
-    template_col1, template_col2 = st.columns(2)
-
-    with template_col1:
-        pdf_template = st.selectbox(
-            "Choose PDF Template Style:",
-            ["Professional Blue", "Academic Classic", "Modern Minimal", "Scientific Research"],
-            help="Select a template that best fits your career focus"
-        )
-
-    with template_col2:
-        pdf_format = st.selectbox(
-            "PDF Format:",
-            ["A4", "Letter"],
-            help="Choose page size for your CV"
-        )
-
-    # Export buttons
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        if st.button("📄 Generate & Download PDF", type="primary"):
-            pdf_file = generate_pdf_cv(cv_data, template=pdf_template, page_format=pdf_format)
-            if pdf_file:
-                filename = f"{personal['full_name'].replace(' ', '_')}_CV_{pdf_template.replace(' ', '_')}.pdf"
-                st.download_button(
-                    label="⬇️ Download PDF",
-                    data=pdf_file,
-                    file_name=filename,
-                    mime="application/pdf"
-                )
-
-    with col2:
-        # Export as JSON
-        json_data = json.dumps(cv_data, indent=2, default=str)
-        st.download_button(
-            label="💾 Export Data (JSON)",
-            data=json_data,
-            file_name=f"{personal['full_name'].replace(' ', '_')}_CV_data.json",
-            mime="application/json"
-        )
-
-    with col3:
-        # Import JSON data
-        uploaded_json = st.file_uploader("📂 Import CV Data", type=['json'])
-        if uploaded_json is not None:
-            try:
-                imported_data = json.load(uploaded_json)
-                st.session_state.cv_data = imported_data
-                st.success("CV data imported successfully!")
-                st.rerun()
-            except Exception as e:
-                st.error(f"Error importing data: {e}")
 
 def generate_pdf_cv(cv_data, template="Professional Blue", page_format="A4"):
     """Generate comprehensive PDF version of the CV with template options"""
