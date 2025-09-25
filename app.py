@@ -9,7 +9,7 @@ import sys
 import os
 
 # Add the src directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from src.models.cv_data import init_cv_data
 from src.utils.styles import load_css, display_main_header
@@ -27,16 +27,18 @@ st.set_page_config(
     page_title="Professional CV Builder",
     page_icon="📄",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
+
 
 def init_session_state():
     """Initialize all session state variables"""
-    if 'cv_data' not in st.session_state:
+    if "cv_data" not in st.session_state:
         st.session_state.cv_data = init_cv_data()
 
-    if 'current_section' not in st.session_state:
-        st.session_state.current_section = 'Personal Information'
+    if "current_section" not in st.session_state:
+        st.session_state.current_section = "Personal Information"
+
 
 def main():
     """Main application function"""
@@ -49,10 +51,12 @@ def main():
 
     # Sidebar navigation
     st.sidebar.title("📋 CV Sections")
-    st.sidebar.markdown("""
+    st.sidebar.markdown(
+        """
     Navigate through different sections to build your comprehensive CV.
     All data is automatically saved during your session.
-    """)
+    """
+    )
 
     sections = [
         "Personal Information",
@@ -62,13 +66,11 @@ def main():
         "Projects",
         "Publications",
         "Certifications & Awards",
-        "Preview & Export"
+        "Preview & Export",
     ]
 
     selected_section = st.sidebar.radio(
-        "Navigate to:",
-        sections,
-        help="Select a section to edit your CV"
+        "Navigate to:", sections, help="Select a section to edit your CV"
     )
     st.session_state.current_section = selected_section
 
@@ -78,16 +80,16 @@ def main():
 
     # Calculate completion progress
     cv_data = st.session_state.cv_data
-    personal = cv_data['personal_info']
+    personal = cv_data["personal_info"]
 
     progress_items = [
-        ("Personal Info", bool(personal.get('full_name') and personal.get('email'))),
-        ("Education", bool(cv_data['education'])),
-        ("Experience", bool(cv_data['experience'])),
-        ("Skills", bool(any(cv_data['skills'].values()))),
-        ("Projects", bool(cv_data['projects'])),
-        ("Publications", bool(cv_data['publications'])),
-        ("Certifications", bool(cv_data['certifications'] or cv_data['awards']))
+        ("Personal Info", bool(personal.get("full_name") and personal.get("email"))),
+        ("Education", bool(cv_data["education"])),
+        ("Experience", bool(cv_data["experience"])),
+        ("Skills", bool(any(cv_data["skills"].values()))),
+        ("Projects", bool(cv_data["projects"])),
+        ("Publications", bool(cv_data["publications"])),
+        ("Certifications", bool(cv_data["certifications"] or cv_data["awards"])),
     ]
 
     completed = sum(1 for _, status in progress_items if status)
@@ -95,7 +97,9 @@ def main():
     progress_percentage = (completed / total) * 100
 
     st.sidebar.progress(progress_percentage / 100)
-    st.sidebar.write(f"Completion: {completed}/{total} sections ({progress_percentage:.1f}%)")
+    st.sidebar.write(
+        f"Completion: {completed}/{total} sections ({progress_percentage:.1f}%)"
+    )
 
     # Show completion status for each section
     for item, status in progress_items:
@@ -112,7 +116,7 @@ def main():
         "📄 Choose from 4 professional PDF templates",
         "🔗 Add LinkedIn and GitHub links for networking",
         "🎓 Include your ORCID for academic credibility",
-        "🚀 Showcase your bioinformatics projects with GitHub links"
+        "🚀 Showcase your bioinformatics projects with GitHub links",
     ]
 
     for tip in tips:
@@ -146,8 +150,9 @@ def main():
             Powered by Streamlit | Export to PDF with multiple professional templates
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
+
 
 if __name__ == "__main__":
     main()
