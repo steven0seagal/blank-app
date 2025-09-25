@@ -2,7 +2,7 @@
 
 [![CI/CD Pipeline](https://github.com/steven0seagal/blank-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/steven0seagal/blank-app/actions/workflows/ci-cd.yml)
 [![Docker Image](https://ghcr.io/steven0seagal/blank-app/badge.svg)](https://ghcr.io/steven0seagal/blank-app)
-[![Security Scan](https://github.com/steven0seagal/blank-app/actions/workflows/security.yml/badge.svg)](https://github.com/USERNAME/REPOSITORY/actions/workflows/security.yml)
+[![Security Scan](https://github.com/steven0seagal/blank-app/actions/workflows/security.yml/badge.svg)](https://github.com/steven0seagal/blank-app/actions/workflows/security.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28.0+-red.svg)](https://streamlit.io)
