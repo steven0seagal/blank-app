@@ -11,8 +11,14 @@ from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
-from reportlab.platypus import (KeepTogether, Paragraph, SimpleDocTemplate,
-                                Spacer, Table, TableStyle)
+from reportlab.platypus import (
+    KeepTogether,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 
 def get_template_colors(template):
