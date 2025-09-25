@@ -4,9 +4,11 @@ CSS styles and UI utilities for the CV Builder application.
 
 import streamlit as st
 
+
 def load_css():
     """Load custom CSS styles for the application"""
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     .main-header {
         font-size: 2.5em;
@@ -118,23 +120,36 @@ def load_css():
         margin: 1em 0;
     }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 def display_success_message(message):
     """Display a success message with custom styling"""
-    st.markdown(f'<div class="success-message">✅ {message}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="success-message">✅ {message}</div>', unsafe_allow_html=True
+    )
+
 
 def display_error_message(message):
     """Display an error message with custom styling"""
-    st.markdown(f'<div class="error-message">❌ {message}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="error-message">❌ {message}</div>', unsafe_allow_html=True
+    )
+
 
 def display_warning_message(message):
     """Display a warning message with custom styling"""
-    st.markdown(f'<div class="warning-message">⚠️ {message}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="warning-message">⚠️ {message}</div>', unsafe_allow_html=True
+    )
+
 
 def display_section_header(title):
     """Display a styled section header"""
     st.markdown(f'<h2 class="section-header">{title}</h2>', unsafe_allow_html=True)
+
 
 def display_main_header(title):
     """Display the main application header"""
