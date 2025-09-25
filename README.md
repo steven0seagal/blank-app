@@ -1,8 +1,15 @@
 # 🧬 Professional CV Builder for Bioinformaticians
 
-A comprehensive **Streamlit-based CV Builder** specifically designed for PhD bioinformaticians, computational biologists, and researchers. Create, customize, and export professional academic and industry CVs with specialized sections for scientific careers.
+[![CI/CD Pipeline](https://github.com/USERNAME/REPOSITORY/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/USERNAME/REPOSITORY/actions/workflows/ci-cd.yml)
+[![Docker Image](https://ghcr.io/USERNAME/REPOSITORY/badge.svg)](https://ghcr.io/USERNAME/REPOSITORY)
+[![Security Scan](https://github.com/USERNAME/REPOSITORY/actions/workflows/security.yml/badge.svg)](https://github.com/USERNAME/REPOSITORY/actions/workflows/security.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28.0+-red.svg)](https://streamlit.io)
+[![Docker](https://img.shields.io/badge/Docker-supported-blue.svg)](https://www.docker.com/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://localhost:8501)
+A comprehensive **Streamlit-based CV Builder** specifically designed for PhD bioinformaticians, computational biologists, and researchers. Create, customize, and export professional academic and industry CVs with specialized sections for scientific careers.
 
 ## 🚀 Features
 
@@ -67,6 +74,58 @@ A comprehensive **Streamlit-based CV Builder** specifically designed for PhD bio
 
 4. **Access the application**
    Open your web browser and navigate to `http://localhost:8501`
+
+## 🐳 Docker Deployment
+
+### Quick Start with Docker
+
+```bash
+# Pull and run from GitHub Container Registry
+docker run -p 8501:8501 ghcr.io/USERNAME/REPOSITORY:latest
+```
+
+### Build Locally
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd blank-app
+
+# Build Docker image
+docker build -t cv-builder .
+
+# Run container
+docker run -p 8501:8501 cv-builder
+```
+
+### Docker Compose (Recommended)
+
+```bash
+# Development mode
+docker-compose up
+
+# Production mode with nginx proxy
+docker-compose --profile production up
+
+# Run in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f cv-builder
+
+# Stop containers
+docker-compose down
+```
+
+### Production Deployment
+
+The application includes a comprehensive CI/CD pipeline that:
+- ✅ Runs tests across Python 3.9, 3.10, and 3.11
+- ✅ Performs security scanning with Trivy
+- ✅ Builds multi-architecture Docker images (AMD64/ARM64)
+- ✅ Pushes to GitHub Container Registry
+- ✅ Supports staging and production deployments
+- ✅ Creates automatic releases for version tags
 
 ### Alternative Installation (Virtual Environment)
 

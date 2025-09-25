@@ -35,6 +35,41 @@ streamlit run streamlit_app.py
 
 The application will start on `http://localhost:8501` with a sidebar navigation system.
 
+## Docker Deployment
+
+### Build and Run with Docker
+```bash
+# Build the Docker image
+docker build -t cv-builder .
+
+# Run the container
+docker run -p 8501:8501 cv-builder
+```
+
+### Using Docker Compose
+```bash
+# Development mode
+docker-compose up
+
+# Production mode with nginx proxy
+docker-compose --profile production up
+```
+
+### Docker Commands
+```bash
+# Build and run in detached mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f cv-builder
+
+# Stop containers
+docker-compose down
+
+# Rebuild and restart
+docker-compose up --build
+```
+
 ## Key Features
 
 ### CV Sections
