@@ -2,10 +2,12 @@
 Preview and Export section for CV Builder.
 """
 
-import streamlit as st
 import json
-from src.utils.styles import display_section_header, display_success_message
+
+import streamlit as st
+
 from src.utils.pdf_generator import generate_pdf_cv
+from src.utils.styles import display_section_header, display_success_message
 
 
 def preview_export_section():

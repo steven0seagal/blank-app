@@ -4,23 +4,24 @@ A comprehensive Streamlit-based CV builder specifically designed for PhD bioinfo
 computational biologists, and researchers.
 """
 
-import streamlit as st
-import sys
 import os
+import sys
+
+import streamlit as st
 
 # Add the src directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from src.models.cv_data import init_cv_data
-from src.utils.styles import load_css, display_main_header
-from src.sections.personal_info import personal_info_section
+from src.sections.certifications_awards import certifications_awards_section
 from src.sections.education import education_section
 from src.sections.experience import experience_section
-from src.sections.skills import skills_section
+from src.sections.personal_info import personal_info_section
+from src.sections.preview_export import preview_export_section
 from src.sections.projects import projects_section
 from src.sections.publications import publications_section
-from src.sections.certifications_awards import certifications_awards_section
-from src.sections.preview_export import preview_export_section
+from src.sections.skills import skills_section
+from src.utils.styles import display_main_header, load_css
 
 # Page configuration
 st.set_page_config(

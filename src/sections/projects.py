@@ -2,10 +2,12 @@
 Projects section for CV Builder.
 """
 
-import streamlit as st
 from datetime import datetime
-from src.utils.styles import display_section_header, display_success_message
+
+import streamlit as st
+
 from src.models.cv_data import validate_project_entry
+from src.utils.styles import display_section_header, display_success_message
 
 
 def projects_section():

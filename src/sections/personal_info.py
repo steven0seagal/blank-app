@@ -4,6 +4,7 @@ Personal Information section for CV Builder.
 
 import streamlit as st
 from PIL import Image
+
 from src.utils.styles import display_section_header
 
 

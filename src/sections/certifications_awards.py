@@ -2,8 +2,10 @@
 Certifications and Awards section for CV Builder.
 """
 
-import streamlit as st
 from datetime import datetime
+
+import streamlit as st
+
 from src.utils.styles import display_section_header, display_success_message
 
 

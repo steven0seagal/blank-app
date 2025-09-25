@@ -3,8 +3,9 @@ Education section for CV Builder.
 """
 
 import streamlit as st
-from src.utils.styles import display_section_header, display_success_message
+
 from src.models.cv_data import validate_education_entry
+from src.utils.styles import display_section_header, display_success_message
 
 
 def education_section():

@@ -2,22 +2,17 @@
 PDF generation utilities for CV export with multiple templates.
 """
 
-import streamlit as st
 from io import BytesIO
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter, A4
+
+import streamlit as st
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Paragraph,
-    Spacer,
-    Table,
-    TableStyle,
-    KeepTogether,
-)
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.pdfgen import canvas
+from reportlab.platypus import (KeepTogether, Paragraph, SimpleDocTemplate,
+                                Spacer, Table, TableStyle)
 
 
 def get_template_colors(template):
